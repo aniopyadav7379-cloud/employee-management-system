@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leave Management — EMS</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    .leave-filters { display:flex; gap:var(--space-3); flex-wrap:wrap; margin-bottom:var(--space-6); }
+    .leave-tab-strip { display:flex; gap:0; border-bottom:2px solid var(--border-subtle); margin-bottom:var(--space-6); }
+    .leave-tab { padding:var(--space-3) var(--space-5); background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-2px; color:var(--text-muted); font-size:0.875rem; font-weight:600; cursor:pointer; transition:all var(--transition-fast); display:flex; align-items:center; gap:var(--space-2); white-space:nowrap; }
+    .leave-tab:hover { color:var(--text-secondary); }
+    .leave-tab.active { color:var(--cyan-300); border-bottom-color:var(--cyan-400); }
+    .leave-count-badge { background:var(--surface-2); color:var(--text-muted); font-size:0.7rem; font-weight:700; padding:2px 7px; border-radius:var(--radius-full); border:1px solid var(--border-subtle); }
+    .leave-tab.active .leave-count-badge { background:rgba(6,182,212,0.15); color:var(--cyan-300); border-color:rgba(6,182,212,0.3); }
+
+    /* Leave request card */
+    .leave-request-card {
+      background:var(--surface-1); border:1px solid var(--border-subtle); border-radius:var(--radius-lg);
+      padding:var(--space-5) var(--space-6); margin-bottom:var(--space-4);
+      display:flex; align-items:center; gap:var(--space-5); transition:all var(--transition-fast);
+    }
+    .leave-request-card:hover { border-color:var(--border-default); }
+    .leave-request-card .emp-info { flex:1; min-width:0; }
+    .leave-request-card .emp-info h4 { font-weight:700; color:var(--text-primary); font-size:0.9375rem; margin-bottom:2px; }
+    .leave-request-card .emp-info .meta { font-size:0.8rem; color:var(--text-muted); display:flex; gap:var(--space-4); flex-wrap:wrap; }
+    .leave-request-card .meta span { display:flex; align-items:center; gap:5px; }
+    .leave-duration { text-align:center; min-width:80px; }
+    .leave-duration .days { font-family:var(--font-display); font-size:1.5rem; font-weight:800; color:var(--text-primary); line-height:1; }
+    .leave-duration .days-label { font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; }
+    .leave-actions { display:flex; gap:var(--space-2); }
+
+    /* Apply Leave Form */
+    .apply-leave-section {
+      background:linear-gradient(135deg, var(--navy-700), var(--navy-800));
+      border:1px solid var(--border-default); border-radius:var(--radius-xl);
+      padding:var(--space-8); margin-bottom:var(--space-8);
+    }
+    .apply-leave-section h2 { font-family:var(--font-display); font-size:1.125rem; font-weight:700; color:var(--text-primary); margin-bottom:var(--space-5); }
+    .leave-balance-strip { display:flex; gap:var(--space-5); margin-bottom:var(--space-6); flex-wrap:wrap; }
+    .leave-balance-item { background:var(--surface-2); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:var(--space-4) var(--space-5); min-width:130px; }
+    .leave-balance-item .bal-type { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:3px; }
+    .leave-balance-item .bal-count { font-family:var(--font-display); font-size:1.625rem; font-weight:800; color:var(--text-primary); line-height:1; }
+    .leave-balance-item .bal-total { font-size:0.7rem; color:var(--text-muted); }
+    .leave-balance-item.low .bal-count { color:var(--danger); }
+  </style>
+</head>
+<body>
+
+<div class="app-shell" id="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo">
+      <div class="logo-icon"><i class="fa-solid fa-users"></i></div>
+      <span class="logo-text">EMS<span>Pro</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="employees.html" class="nav-item"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+      <a href="departments.html" class="nav-item"><i class="fa-solid fa-building"></i><span>Departments</span></a>
+      <span class="nav-section-label">HR</span>
+      <a href="leave-management.html" class="nav-item active"><i class="fa-solid fa-calendar-xmark"></i><span>Leave Management</span><span class="nav-badge" id="pending-leave-count">3</span></a>
+      <span class="nav-section-label">Account</span>
+      <a href="profile.html" class="nav-item"><i class="fa-solid fa-user-circle"></i><span>My Profile</span></a>
+      <a href="#" class="nav-item" id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign Out</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="profile.html" class="sidebar-user">
+        <div class="avatar" id="sidebar-avatar">AD</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Admin User</div>
+          <div class="user-role" id="sidebar-user-role">Administrator</div>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <button class="topbar-toggle" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+    <div class="topbar-breadcrumb">
+      <span>EMS</span><i class="fa-solid fa-chevron-right"></i>
+      <span class="current">Leave Management</span>
+    </div>
+    <div class="topbar-actions">
+      <a href="profile.html" class="topbar-avatar" id="topbar-avatar">AD</a>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Leave Management</h1>
+        <p class="page-subtitle">Review, approve, and manage employee leave requests.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openApplyModal()">
+        <i class="fa-solid fa-plus"></i> Apply for Leave
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid-4 mb-8">
+      <div class="stat-card">
+        <div class="stat-icon icon-warning"><i class="fa-solid fa-clock"></i></div>
+        <div class="stat-value" id="stat-pending">—</div>
+        <div class="stat-label">Pending Requests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-success"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="stat-value" id="stat-approved">—</div>
+        <div class="stat-label">Approved This Month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-danger"><i class="fa-solid fa-circle-xmark"></i></div>
+        <div class="stat-value" id="stat-rejected">—</div>
+        <div class="stat-label">Rejected This Month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-cyan"><i class="fa-solid fa-calendar"></i></div>
+        <div class="stat-value" id="stat-on-leave-today">—</div>
+        <div class="stat-label">On Leave Today</div>
+      </div>
+    </div>
+
+    <!-- Filter strip -->
+    <div class="leave-filters">
+      <div class="search-box" style="max-width:280px;">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="leave-search" placeholder="Search employee name…" />
+      </div>
+      <select class="filter-select" id="leave-type-filter">
+        <option value="">All Leave Types</option>
+        <option value="CASUAL">Casual Leave</option>
+        <option value="SICK">Sick Leave</option>
+        <option value="ANNUAL">Annual Leave</option>
+        <option value="MATERNITY">Maternity Leave</option>
+        <option value="PATERNITY">Paternity Leave</option>
+        <option value="UNPAID">Unpaid Leave</option>
+      </select>
+      <select class="filter-select" id="dept-leave-filter">
+        <option value="">All Departments</option>
+      </select>
+      <input type="month" class="filter-select" id="month-filter" style="cursor:pointer;" />
+    </div>
+
+    <!-- Tabs -->
+    <div class="leave-tab-strip">
+      <button class="leave-tab active" onclick="switchTab('pending')" id="tab-pending">
+        Pending <span class="leave-count-badge" id="count-pending">0</span>
+      </button>
+      <button class="leave-tab" onclick="switchTab('approved')" id="tab-approved">
+        Approved <span class="leave-count-badge" id="count-approved">0</span>
+      </button>
+      <button class="leave-tab" onclick="switchTab('rejected')" id="tab-rejected">
+        Rejected <span class="leave-count-badge" id="count-rejected">0</span>
+      </button>
+      <button class="leave-tab" onclick="switchTab('all')" id="tab-all">
+        All Requests <span class="leave-count-badge" id="count-all">0</span>
+      </button>
+    </div>
+
+    <!-- Leave Request List -->
+    <div id="leave-list-container">
+      <div style="text-align:center;padding:4rem;color:var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;"></i>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Apply Leave Modal -->
+<div class="modal-overlay" id="apply-leave-modal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <div class="modal-title">Apply for Leave</div>
+      <button class="modal-close" onclick="closeModal('apply-leave-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <!-- Leave balance -->
+      <div class="leave-balance-strip" id="leave-balance-strip"></div>
+
+      <form id="apply-leave-form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="leave-type">Leave Type *</label>
+            <select id="leave-type" class="form-select" required>
+              <option value="">Select type</option>
+              <option value="CASUAL">Casual Leave</option>
+              <option value="SICK">Sick Leave</option>
+              <option value="ANNUAL">Annual Leave</option>
+              <option value="MATERNITY">Maternity Leave</option>
+              <option value="PATERNITY">Paternity Leave</option>
+              <option value="UNPAID">Unpaid Leave</option>
+            </select>
+            <div class="form-error" id="leave-type-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="leave-employee">Employee *</label>
+            <select id="leave-employee" class="form-select" required>
+              <option value="">Select employee</option>
+            </select>
+            <div class="form-error" id="leave-employee-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="start-date">Start Date *</label>
+            <input type="date" id="start-date" class="form-control" required />
+            <div class="form-error" id="start-date-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="end-date">End Date *</label>
+            <input type="date" id="end-date" class="form-control" required />
+            <div class="form-error" id="end-date-error"></div>
+          </div>
+        </div>
+        <div class="form-group" id="days-preview" style="display:none;">
+          <div style="background:var(--surface-2);border:1px solid var(--border-default);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);font-size:0.875rem;color:var(--cyan-300);">
+            <i class="fa-solid fa-calendar-days"></i> Duration: <strong id="days-count">0</strong> working day(s)
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="leave-reason">Reason *</label>
+          <textarea id="leave-reason" class="form-control" rows="3" placeholder="Brief reason for leave…" required></textarea>
+          <div class="form-error" id="leave-reason-error"></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('apply-leave-modal')">Cancel</button>
+      <button class="btn btn-primary" id="apply-leave-submit-btn" onclick="submitLeaveForm()">
+        <i class="fa-solid fa-paper-plane"></i> Submit Request
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- View Leave Detail Modal -->
+<div class="modal-overlay" id="leave-detail-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Leave Request Details</div>
+      <button class="modal-close" onclick="closeModal('leave-detail-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="leave-detail-body">
+      <!-- Populated via JS -->
+    </div>
+    <div class="modal-footer" id="leave-detail-actions"></div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script src="js/leave.js"></script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile — EMS</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/employee.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+<div class="app-shell" id="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo">
+      <div class="logo-icon"><i class="fa-solid fa-users"></i></div>
+      <span class="logo-text">EMS<span>Pro</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="employees.html" class="nav-item"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+      <a href="departments.html" class="nav-item"><i class="fa-solid fa-building"></i><span>Departments</span></a>
+      <span class="nav-section-label">HR</span>
+      <a href="leave-management.html" class="nav-item"><i class="fa-solid fa-calendar-xmark"></i><span>Leave Management</span></a>
+      <span class="nav-section-label">Account</span>
+      <a href="profile.html" class="nav-item active"><i class="fa-solid fa-user-circle"></i><span>My Profile</span></a>
+      <a href="#" class="nav-item" id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign Out</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="profile.html" class="sidebar-user">
+        <div class="avatar" id="sidebar-avatar">AD</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Admin User</div>
+          <div class="user-role" id="sidebar-user-role">Administrator</div>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <button class="topbar-toggle" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+    <div class="topbar-breadcrumb">
+      <span>EMS</span><i class="fa-solid fa-chevron-right"></i>
+      <span class="current">My Profile</span>
+    </div>
+    <div class="topbar-actions">
+      <a href="profile.html" class="topbar-avatar" id="topbar-avatar">AD</a>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">My Profile</h1>
+        <p class="page-subtitle">View and update your account information.</p>
+      </div>
+      <button class="btn btn-primary" id="edit-profile-toggle">
+        <i class="fa-solid fa-pen"></i> Edit Profile
+      </button>
+    </div>
+
+    <div class="profile-layout">
+
+      <!-- Left: Profile Card -->
+      <div>
+        <div class="profile-sidebar-card">
+          <div class="profile-banner"></div>
+          <div class="profile-card-content">
+            <div class="profile-avatar-wrap">
+              <div class="profile-avatar-lg" id="profile-avatar-lg">AD</div>
+            </div>
+            <div class="profile-name" id="profile-name">Admin User</div>
+            <div class="profile-designation" id="profile-designation">Administrator</div>
+            <div class="profile-dept-badge">
+              <span class="badge badge-active" id="profile-dept-badge">
+                <span class="badge-dot"></span> <span id="profile-dept-text">Management</span>
+              </span>
+            </div>
+
+            <div class="profile-meta">
+              <div class="profile-meta-row">
+                <i class="fa-solid fa-envelope"></i>
+                <div>
+                  <div class="profile-meta-label">Email</div>
+                  <div class="profile-meta-value" id="profile-email">admin@ems.com</div>
+                </div>
+              </div>
+              <div class="profile-meta-row">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                  <div class="profile-meta-label">Phone</div>
+                  <div class="profile-meta-value" id="profile-phone">—</div>
+                </div>
+              </div>
+              <div class="profile-meta-row">
+                <i class="fa-solid fa-id-badge"></i>
+                <div>
+                  <div class="profile-meta-label">Employee ID</div>
+                  <div class="profile-meta-value" id="profile-emp-id">EMS-001</div>
+                </div>
+              </div>
+              <div class="profile-meta-row">
+                <i class="fa-solid fa-calendar-plus"></i>
+                <div>
+                  <div class="profile-meta-label">Joined</div>
+                  <div class="profile-meta-value" id="profile-join-date">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leave Balance Card -->
+        <div class="card" style="margin-top:var(--space-5);">
+          <div class="card-header"><div class="card-title">Leave Balance</div></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:var(--space-4);" id="leave-balance-list">
+              <div class="flex" style="justify-content:space-between;align-items:center;">
+                <span class="text-sm" style="color:var(--text-secondary);">Casual Leave</span>
+                <div style="display:flex;align-items:center;gap:var(--space-3);">
+                  <div style="width:80px;height:5px;background:var(--border-subtle);border-radius:3px;overflow:hidden;">
+                    <div style="width:60%;height:100%;background:var(--indigo-400);border-radius:3px;"></div>
+                  </div>
+                  <span class="text-sm font-bold">6 / 10</span>
+                </div>
+              </div>
+              <div class="flex" style="justify-content:space-between;align-items:center;">
+                <span class="text-sm" style="color:var(--text-secondary);">Sick Leave</span>
+                <div style="display:flex;align-items:center;gap:var(--space-3);">
+                  <div style="width:80px;height:5px;background:var(--border-subtle);border-radius:3px;overflow:hidden;">
+                    <div style="width:80%;height:100%;background:var(--success);border-radius:3px;"></div>
+                  </div>
+                  <span class="text-sm font-bold">8 / 10</span>
+                </div>
+              </div>
+              <div class="flex" style="justify-content:space-between;align-items:center;">
+                <span class="text-sm" style="color:var(--text-secondary);">Annual Leave</span>
+                <div style="display:flex;align-items:center;gap:var(--space-3);">
+                  <div style="width:80px;height:5px;background:var(--border-subtle);border-radius:3px;overflow:hidden;">
+                    <div style="width:25%;height:100%;background:var(--warning);border-radius:3px;"></div>
+                  </div>
+                  <span class="text-sm font-bold">5 / 20</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Tabs & Details -->
+      <div class="profile-main">
+
+        <div class="card">
+          <div class="card-body" style="padding-bottom:0;">
+            <div class="tabs" id="profile-tabs">
+              <button class="tab-btn active" onclick="switchProfileTab('info')" id="tab-info">
+                <i class="fa-solid fa-circle-info"></i> Personal Info
+              </button>
+              <button class="tab-btn" onclick="switchProfileTab('security')" id="tab-security">
+                <i class="fa-solid fa-shield-halved"></i> Security
+              </button>
+              <button class="tab-btn" onclick="switchProfileTab('leaves')" id="tab-leaves">
+                <i class="fa-solid fa-calendar"></i> My Leaves
+              </button>
+            </div>
+          </div>
+
+          <!-- Personal Info Tab -->
+          <div class="tab-panel active" id="panel-info">
+            <div class="card-body">
+              <!-- View Mode -->
+              <div id="view-mode">
+                <div class="form-row">
+                  <div>
+                    <div class="form-label text-muted text-xs">First Name</div>
+                    <div class="text-primary font-semibold" id="view-first-name">Admin</div>
+                  </div>
+                  <div>
+                    <div class="form-label text-muted text-xs">Last Name</div>
+                    <div class="text-primary font-semibold" id="view-last-name">User</div>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="form-row">
+                  <div>
+                    <div class="form-label text-muted text-xs">Email</div>
+                    <div class="text-primary font-semibold" id="view-email">admin@ems.com</div>
+                  </div>
+                  <div>
+                    <div class="form-label text-muted text-xs">Phone</div>
+                    <div class="text-primary font-semibold" id="view-phone">—</div>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="form-row">
+                  <div>
+                    <div class="form-label text-muted text-xs">Department</div>
+                    <div class="text-primary font-semibold" id="view-department">Management</div>
+                  </div>
+                  <div>
+                    <div class="form-label text-muted text-xs">Designation</div>
+                    <div class="text-primary font-semibold" id="view-designation">Administrator</div>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="form-row">
+                  <div>
+                    <div class="form-label text-muted text-xs">Date of Birth</div>
+                    <div class="text-primary font-semibold" id="view-dob">—</div>
+                  </div>
+                  <div>
+                    <div class="form-label text-muted text-xs">Gender</div>
+                    <div class="text-primary font-semibold" id="view-gender">—</div>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div>
+                  <div class="form-label text-muted text-xs">Address</div>
+                  <div class="text-primary font-semibold" id="view-address">—</div>
+                </div>
+              </div>
+
+              <!-- Edit Mode (hidden by default) -->
+              <div id="edit-mode" style="display:none;">
+                <form id="profile-form" novalidate>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="edit-first-name">First Name *</label>
+                      <input type="text" id="edit-first-name" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="edit-last-name">Last Name *</label>
+                      <input type="text" id="edit-last-name" class="form-control" required />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="edit-email">Email *</label>
+                      <input type="email" id="edit-email" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="edit-phone">Phone</label>
+                      <input type="tel" id="edit-phone" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="edit-dob">Date of Birth</label>
+                      <input type="date" id="edit-dob" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="edit-gender">Gender</label>
+                      <select id="edit-gender" class="form-select">
+                        <option value="">Select</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                        <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="edit-address">Address</label>
+                    <textarea id="edit-address" class="form-control" rows="2"></textarea>
+                  </div>
+                  <div class="flex gap-3" style="justify-content:flex-end;margin-top:var(--space-4);">
+                    <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Tab -->
+          <div class="tab-panel" id="panel-security">
+            <div class="card-body">
+              <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:var(--space-5);">Change Password</h3>
+              <form id="password-form" novalidate>
+                <div class="form-group">
+                  <label class="form-label" for="current-password">Current Password *</label>
+                  <div class="input-icon-wrapper" style="position:relative;">
+                    <input type="password" id="current-password" class="form-control" required />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="new-password">New Password *</label>
+                  <input type="password" id="new-password" class="form-control" required />
+                  <div class="form-error" id="new-password-error"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="confirm-password">Confirm New Password *</label>
+                  <input type="password" id="confirm-password" class="form-control" required />
+                  <div class="form-error" id="confirm-password-error"></div>
+                </div>
+
+                <div style="background:var(--surface-2);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);margin-bottom:var(--space-5);font-size:0.8125rem;color:var(--text-secondary);">
+                  <strong style="color:var(--text-primary);display:block;margin-bottom:var(--space-2);">Password requirements:</strong>
+                  <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
+                    <li id="req-len"><i class="fa-solid fa-circle text-muted" style="font-size:0.5rem;margin-right:8px;"></i>At least 8 characters</li>
+                    <li id="req-upper"><i class="fa-solid fa-circle text-muted" style="font-size:0.5rem;margin-right:8px;"></i>One uppercase letter</li>
+                    <li id="req-num"><i class="fa-solid fa-circle text-muted" style="font-size:0.5rem;margin-right:8px;"></i>One number</li>
+                    <li id="req-special"><i class="fa-solid fa-circle text-muted" style="font-size:0.5rem;margin-right:8px;"></i>One special character</li>
+                  </ul>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa-solid fa-lock"></i> Update Password
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- My Leaves Tab -->
+          <div class="tab-panel" id="panel-leaves">
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrapper" style="border:none;border-radius:0;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>From</th>
+                      <th>To</th>
+                      <th>Days</th>
+                      <th>Reason</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="my-leaves-tbody">
+                    <tr><td colspan="6" style="text-align:center;padding:3rem;color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

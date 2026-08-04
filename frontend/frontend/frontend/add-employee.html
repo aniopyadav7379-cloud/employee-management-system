@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Employee — EMS</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/employee.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+<div class="app-shell" id="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo">
+      <div class="logo-icon"><i class="fa-solid fa-users"></i></div>
+      <span class="logo-text">EMS<span>Pro</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="employees.html" class="nav-item active"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+      <a href="departments.html" class="nav-item"><i class="fa-solid fa-building"></i><span>Departments</span></a>
+      <span class="nav-section-label">HR</span>
+      <a href="leave-management.html" class="nav-item"><i class="fa-solid fa-calendar-xmark"></i><span>Leave Management</span></a>
+      <span class="nav-section-label">Account</span>
+      <a href="profile.html" class="nav-item"><i class="fa-solid fa-user-circle"></i><span>My Profile</span></a>
+      <a href="#" class="nav-item" id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign Out</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="profile.html" class="sidebar-user">
+        <div class="avatar" id="sidebar-avatar">AD</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Admin User</div>
+          <div class="user-role" id="sidebar-user-role">Administrator</div>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button class="topbar-toggle" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+    <div class="topbar-breadcrumb">
+      <a href="employees.html" style="color:var(--text-muted);text-decoration:none;">Employees</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="current">Add New Employee</span>
+    </div>
+    <div class="topbar-actions">
+      <a href="profile.html" class="topbar-avatar" id="topbar-avatar">AD</a>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Add New Employee</h1>
+        <p class="page-subtitle">Fill in the details below to register a new employee.</p>
+      </div>
+      <div class="flex gap-3">
+        <a href="employees.html" class="btn btn-secondary">
+          <i class="fa-solid fa-xmark"></i> Cancel
+        </a>
+        <button type="button" class="btn btn-primary" id="save-employee-btn">
+          <i class="fa-solid fa-floppy-disk"></i> Save Employee
+        </button>
+      </div>
+    </div>
+
+    <div class="form-page-layout">
+
+      <form id="add-employee-form" novalidate>
+
+        <!-- Avatar Upload -->
+        <div class="card mb-6">
+          <div class="card-header"><div class="card-title">Profile Photo</div></div>
+          <div class="card-body">
+            <div class="avatar-upload">
+              <div class="avatar-preview" id="avatar-preview">
+                <span id="avatar-initials">?</span>
+                <img id="avatar-img" src="" alt="" />
+              </div>
+              <div class="avatar-upload-actions">
+                <label for="photo-upload" class="btn btn-secondary btn-sm" style="cursor:pointer;">
+                  <i class="fa-solid fa-upload"></i> Upload Photo
+                </label>
+                <input type="file" id="photo-upload" accept="image/*" />
+                <button type="button" class="btn btn-ghost btn-sm" id="remove-photo-btn" style="display:none;">
+                  <i class="fa-solid fa-trash"></i> Remove
+                </button>
+                <span class="avatar-hint">JPG, PNG or GIF. Max 2 MB.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="card mb-6">
+          <div class="card-header"><div class="card-title">Personal Information</div></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="first-name">First Name <span style="color:var(--danger)">*</span></label>
+                <input type="text" id="first-name" class="form-control" placeholder="Priya" required />
+                <div class="form-error" id="first-name-error"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="last-name">Last Name <span style="color:var(--danger)">*</span></label>
+                <input type="text" id="last-name" class="form-control" placeholder="Sharma" required />
+                <div class="form-error" id="last-name-error"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address <span style="color:var(--danger)">*</span></label>
+                <input type="email" id="email" class="form-control" placeholder="priya.sharma@company.com" required />
+                <div class="form-error" id="email-error"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number <span style="color:var(--danger)">*</span></label>
+                <input type="tel" id="phone" class="form-control" placeholder="+91 98765 43210" required />
+                <div class="form-error" id="phone-error"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="dob">Date of Birth</label>
+                <input type="date" id="dob" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="gender">Gender</label>
+                <select id="gender" class="form-select">
+                  <option value="">Select gender</option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                  <option value="OTHER">Other</option>
+                  <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="address">Residential Address</label>
+              <textarea id="address" class="form-control" placeholder="Full address including city, state and pincode" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Employment Details -->
+        <div class="card mb-6">
+          <div class="card-header"><div class="card-title">Employment Details</div></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="employee-id">Employee ID <span style="color:var(--danger)">*</span></label>
+                <input type="text" id="employee-id" class="form-control" placeholder="EMS-001" required />
+                <div class="form-error" id="employee-id-error"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="department">Department <span style="color:var(--danger)">*</span></label>
+                <select id="department" class="form-select" required>
+                  <option value="">Select department</option>
+                </select>
+                <div class="form-error" id="department-error"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="designation">Designation <span style="color:var(--danger)">*</span></label>
+                <input type="text" id="designation" class="form-control" placeholder="Software Engineer" required />
+                <div class="form-error" id="designation-error"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="employment-type">Employment Type</label>
+                <select id="employment-type" class="form-select">
+                  <option value="FULL_TIME">Full-time</option>
+                  <option value="PART_TIME">Part-time</option>
+                  <option value="CONTRACT">Contract</option>
+                  <option value="INTERN">Intern</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="join-date">Joining Date <span style="color:var(--danger)">*</span></label>
+                <input type="date" id="join-date" class="form-control" required />
+                <div class="form-error" id="join-date-error"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="status">Status</label>
+                <select id="status" class="form-select">
+                  <option value="ACTIVE">Active</option>
+                  <option value="INACTIVE">Inactive</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="salary">Salary (₹)</label>
+                <input type="number" id="salary" class="form-control" placeholder="600000" min="0" step="1000" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="manager">Reporting Manager</label>
+                <select id="manager" class="form-select">
+                  <option value="">No manager</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Emergency Contact -->
+        <div class="card mb-6">
+          <div class="card-header"><div class="card-title">Emergency Contact</div></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="emergency-name">Contact Name</label>
+                <input type="text" id="emergency-name" class="form-control" placeholder="Relative or friend name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="emergency-relation">Relationship</label>
+                <select id="emergency-relation" class="form-select">
+                  <option value="">Select relationship</option>
+                  <option value="SPOUSE">Spouse</option>
+                  <option value="PARENT">Parent</option>
+                  <option value="SIBLING">Sibling</option>
+                  <option value="CHILD">Child</option>
+                  <option value="FRIEND">Friend</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="emergency-phone">Emergency Phone</label>
+              <input type="tel" id="emergency-phone" class="form-control" placeholder="+91 99887 65432" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="card mb-8">
+          <div class="card-header"><div class="card-title">Additional Notes</div></div>
+          <div class="card-body">
+            <textarea id="notes" class="form-control" rows="3" placeholder="Any additional notes about this employee…"></textarea>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex gap-3" style="justify-content:flex-end;">
+          <a href="employees.html" class="btn btn-secondary">
+            <i class="fa-solid fa-xmark"></i> Cancel
+          </a>
+          <button type="submit" class="btn btn-primary" id="submit-btn">
+            <i class="fa-solid fa-floppy-disk"></i> Save Employee
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script src="js/employee.js"></script>
+</body>
+</html>

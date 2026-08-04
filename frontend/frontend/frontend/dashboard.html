@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — EMS</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+</head>
+<body>
+
+<div class="app-shell" id="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo">
+      <div class="logo-icon"><i class="fa-solid fa-users"></i></div>
+      <span class="logo-text">EMS<span>Pro</span></span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+
+      <a href="dashboard.html" class="nav-item active">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="employees.html" class="nav-item">
+        <i class="fa-solid fa-users"></i>
+        <span>Employees</span>
+      </a>
+      <a href="departments.html" class="nav-item">
+        <i class="fa-solid fa-building"></i>
+        <span>Departments</span>
+      </a>
+
+      <span class="nav-section-label">HR</span>
+
+      <a href="leave-management.html" class="nav-item">
+        <i class="fa-solid fa-calendar-xmark"></i>
+        <span>Leave Management</span>
+        <span class="nav-badge" id="pending-leave-count">3</span>
+      </a>
+
+      <span class="nav-section-label">Account</span>
+
+      <a href="profile.html" class="nav-item">
+        <i class="fa-solid fa-user-circle"></i>
+        <span>My Profile</span>
+      </a>
+      <a href="#" class="nav-item" id="logout-btn">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Sign Out</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="profile.html" class="sidebar-user">
+        <div class="avatar" id="sidebar-avatar">AD</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Admin User</div>
+          <div class="user-role" id="sidebar-user-role">Administrator</div>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button class="topbar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="topbar-breadcrumb">
+      <span>EMS</span>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="current">Dashboard</span>
+    </div>
+
+    <div class="topbar-search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" placeholder="Search employees, departments…" id="global-search" />
+    </div>
+
+    <div class="topbar-actions">
+      <a href="leave-management.html" class="topbar-icon-btn" title="Leave requests">
+        <i class="fa-solid fa-bell"></i>
+        <span class="notif-dot"></span>
+      </a>
+      <a href="#" class="topbar-icon-btn" title="Settings">
+        <i class="fa-solid fa-gear"></i>
+      </a>
+      <a href="profile.html" class="topbar-avatar" id="topbar-avatar">AD</a>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div class="welcome-text">
+        <h2>Good morning, <span id="welcome-name">Admin</span> 👋</h2>
+        <p>Here's what's happening with your workforce today.</p>
+      </div>
+      <div class="welcome-date">
+        <div class="date-num" id="date-num">--</div>
+        <div class="date-str" id="date-str">Loading…</div>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon icon-indigo"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-label">Total Employees</div>
+        <div class="stat-change up"><i class="fa-solid fa-arrow-trend-up"></i> +4 this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-cyan"><i class="fa-solid fa-building"></i></div>
+        <div class="stat-value" id="stat-depts">—</div>
+        <div class="stat-label">Departments</div>
+        <div class="stat-change up"><i class="fa-solid fa-arrow-trend-up"></i> +1 new</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-warning"><i class="fa-solid fa-calendar-xmark"></i></div>
+        <div class="stat-value" id="stat-on-leave">—</div>
+        <div class="stat-label">On Leave Today</div>
+        <div class="stat-change down"><i class="fa-solid fa-arrow-trend-down"></i> -2 from yesterday</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-success"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="stat-value" id="stat-active">—</div>
+        <div class="stat-label">Active Employees</div>
+        <div class="stat-change up"><i class="fa-solid fa-arrow-trend-up"></i> 96% rate</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="dashboard-grid mb-6">
+      <!-- Headcount Trend Chart -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Headcount Trend</div>
+          <div class="flex gap-2">
+            <button class="btn btn-ghost btn-sm" onclick="setChartPeriod('month')" id="btn-month">Month</button>
+            <button class="btn btn-ghost btn-sm" onclick="setChartPeriod('year')" id="btn-year">Year</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-wrapper"><canvas id="headcount-chart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Department Distribution -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">By Department</div>
+        </div>
+        <div class="card-body">
+          <div style="width:160px;height:160px;margin:0 auto;">
+            <canvas id="dept-chart"></canvas>
+          </div>
+          <div class="chart-legend" id="dept-legend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Third Row -->
+    <div class="dashboard-grid-3 mb-6">
+
+      <!-- Recent Activity -->
+      <div class="card" style="grid-column: span 2;">
+        <div class="card-header">
+          <div class="card-title">Recent Activity</div>
+          <a href="#" class="btn btn-ghost btn-sm">View all</a>
+        </div>
+        <div class="card-body" style="padding-top:0;padding-bottom:0;">
+          <div class="activity-list" id="activity-list">
+            <div class="activity-item">
+              <div class="activity-dot indigo"></div>
+              <div class="activity-text">
+                <div class="activity-msg"><strong>Priya Sharma</strong> was added as a new Software Engineer</div>
+                <div class="activity-time">2 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot warning"></div>
+              <div class="activity-text">
+                <div class="activity-msg"><strong>Rahul Mehta</strong> submitted a leave request for 3 days</div>
+                <div class="activity-time">18 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot success"></div>
+              <div class="activity-text">
+                <div class="activity-msg">Leave request for <strong>Ananya Reddy</strong> was approved</div>
+                <div class="activity-time">1 hour ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot cyan"></div>
+              <div class="activity-text">
+                <div class="activity-msg"><strong>Marketing</strong> department was updated</div>
+                <div class="activity-time">3 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot indigo"></div>
+              <div class="activity-text">
+                <div class="activity-msg"><strong>Vikram Nair</strong> profile updated — promoted to Senior Developer</div>
+                <div class="activity-time">Yesterday</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Quick Actions</div>
+        </div>
+        <div class="card-body">
+          <div class="quick-actions-grid">
+            <a href="add-employee.html" class="quick-action">
+              <i class="fa-solid fa-user-plus" style="color:var(--indigo-300)"></i>
+              <span>Add Employee</span>
+            </a>
+            <a href="leave-management.html" class="quick-action">
+              <i class="fa-solid fa-calendar-check" style="color:var(--success)"></i>
+              <span>Approve Leave</span>
+            </a>
+            <a href="departments.html" class="quick-action">
+              <i class="fa-solid fa-building" style="color:var(--cyan-400)"></i>
+              <span>Departments</span>
+            </a>
+            <a href="employees.html" class="quick-action">
+              <i class="fa-solid fa-magnifying-glass" style="color:var(--warning)"></i>
+              <span>Search Staff</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Row: Recent Employees + Leave Requests -->
+    <div class="dashboard-grid">
+      <!-- Recent Employees -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recently Joined</div>
+          <a href="employees.html" class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-arrow-right"></i> View All
+          </a>
+        </div>
+        <div class="table-wrapper" style="border:none;border-radius:0;">
+          <table id="recent-employees-table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Joined</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="recent-employees-body">
+              <tr><td colspan="4" class="empty-state" style="padding:2rem;"><i class="fa-solid fa-spinner fa-spin"></i> Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pending Leave Requests -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Pending Leaves</div>
+          <a href="leave-management.html" class="btn btn-secondary btn-sm">Manage</a>
+        </div>
+        <div class="card-body" style="padding-top:0;padding-bottom:0;">
+          <div class="leave-overview-list" id="pending-leaves-list" style="padding:var(--space-4) 0;">
+            <div class="leave-overview-item">
+              <div class="leave-overview-name">
+                <div class="emp-avatar" style="width:30px;height:30px;font-size:0.75rem;">RM</div>
+                Rahul Mehta
+              </div>
+              <span class="badge badge-pending badge-dot">Pending</span>
+            </div>
+            <div class="leave-overview-item">
+              <div class="leave-overview-name">
+                <div class="emp-avatar" style="width:30px;height:30px;font-size:0.75rem;">SK</div>
+                Sneha Kapoor
+              </div>
+              <span class="badge badge-pending badge-dot">Pending</span>
+            </div>
+            <div class="leave-overview-item">
+              <div class="leave-overview-name">
+                <div class="emp-avatar" style="width:30px;height:30px;font-size:0.75rem;">AK</div>
+                Arjun Kumar
+              </div>
+              <span class="badge badge-pending badge-dot">Pending</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

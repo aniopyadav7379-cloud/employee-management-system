@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Departments — EMS</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--space-5);
+      margin-bottom: var(--space-8);
+    }
+    .dept-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all var(--transition-normal);
+    }
+    .dept-card:hover { border-color: var(--border-default); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .dept-card-accent {
+      height: 4px;
+      background: linear-gradient(90deg, var(--indigo-500), var(--cyan-500));
+    }
+    .dept-card-body { padding: var(--space-5) var(--space-6); }
+    .dept-icon {
+      width: 52px; height: 52px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.375rem;
+      margin-bottom: var(--space-4);
+    }
+    .dept-name {
+      font-family: var(--font-display);
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-1);
+    }
+    .dept-head {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-4);
+    }
+    .dept-stats {
+      display: flex;
+      gap: var(--space-6);
+      padding: var(--space-4) 0;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: var(--space-2);
+    }
+    .dept-stat-item .val { font-weight: 700; color: var(--text-primary); font-size: 1.125rem; }
+    .dept-stat-item .lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .dept-card-footer {
+      padding: var(--space-3) var(--space-6);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      gap: var(--space-2);
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell" id="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo">
+      <div class="logo-icon"><i class="fa-solid fa-users"></i></div>
+      <span class="logo-text">EMS<span>Pro</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="employees.html" class="nav-item"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+      <a href="departments.html" class="nav-item active"><i class="fa-solid fa-building"></i><span>Departments</span></a>
+      <span class="nav-section-label">HR</span>
+      <a href="leave-management.html" class="nav-item"><i class="fa-solid fa-calendar-xmark"></i><span>Leave Management</span></a>
+      <span class="nav-section-label">Account</span>
+      <a href="profile.html" class="nav-item"><i class="fa-solid fa-user-circle"></i><span>My Profile</span></a>
+      <a href="#" class="nav-item" id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign Out</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="profile.html" class="sidebar-user">
+        <div class="avatar" id="sidebar-avatar">AD</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Admin User</div>
+          <div class="user-role" id="sidebar-user-role">Administrator</div>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <button class="topbar-toggle" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+    <div class="topbar-breadcrumb">
+      <span>EMS</span><i class="fa-solid fa-chevron-right"></i>
+      <span class="current">Departments</span>
+    </div>
+    <div class="topbar-search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" placeholder="Search departments…" id="dept-search" />
+    </div>
+    <div class="topbar-actions">
+      <a href="profile.html" class="topbar-avatar" id="topbar-avatar">AD</a>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Departments</h1>
+        <p class="page-subtitle">Organize and manage your company's departments.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openAddDeptModal()">
+        <i class="fa-solid fa-plus"></i> New Department
+      </button>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="grid-4 mb-8">
+      <div class="stat-card">
+        <div class="stat-icon icon-indigo"><i class="fa-solid fa-building"></i></div>
+        <div class="stat-value" id="total-depts">—</div>
+        <div class="stat-label">Total Departments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-cyan"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-value" id="total-in-depts">—</div>
+        <div class="stat-label">Total Employees</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-success"><i class="fa-solid fa-arrow-trend-up"></i></div>
+        <div class="stat-value" id="largest-dept-count">—</div>
+        <div class="stat-label">Largest Department</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon icon-warning"><i class="fa-solid fa-user-check"></i></div>
+        <div class="stat-value" id="avg-dept-size">—</div>
+        <div class="stat-label">Avg. Dept. Size</div>
+      </div>
+    </div>
+
+    <!-- Department Cards -->
+    <div class="dept-grid" id="dept-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;"></i>
+      </div>
+    </div>
+
+    <!-- Also show as table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Department List</div>
+      </div>
+      <div class="table-wrapper" style="border:none;border-radius:0;">
+        <table>
+          <thead>
+            <tr>
+              <th>Department Name</th>
+              <th>Head</th>
+              <th>Employees</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="dept-table-body">
+            <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Add/Edit Department Modal -->
+<div class="modal-overlay" id="dept-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="dept-modal-title">New Department</div>
+      <button class="modal-close" onclick="closeModal('dept-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="dept-form" novalidate>
+        <input type="hidden" id="dept-id" />
+        <div class="form-group">
+          <label class="form-label" for="dept-name">Department Name *</label>
+          <input type="text" id="dept-name" class="form-control" placeholder="e.g. Engineering" required />
+          <div class="form-error" id="dept-name-error"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="dept-head-input">Department Head</label>
+          <input type="text" id="dept-head-input" class="form-control" placeholder="Manager name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="dept-location">Location</label>
+          <input type="text" id="dept-location" class="form-control" placeholder="e.g. Hyderabad" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="dept-description">Description</label>
+          <textarea id="dept-description" class="form-control" rows="3" placeholder="Brief description of the department…"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="dept-status">Status</label>
+          <select id="dept-status" class="form-select">
+            <option value="ACTIVE">Active</option>
+            <option value="INACTIVE">Inactive</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('dept-modal')">Cancel</button>
+      <button class="btn btn-primary" id="dept-submit-btn" onclick="submitDeptForm()">
+        <i class="fa-solid fa-floppy-disk"></i> Save Department
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="dept-delete-modal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-body" style="text-align:center;padding:var(--space-8);">
+      <div class="confirm-delete-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="confirm-title">Delete Department?</div>
+      <p class="confirm-text">Deleting <strong id="delete-dept-name"></strong> will remove it permanently. Employees in this department will need to be reassigned.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('dept-delete-modal')">Cancel</button>
+      <button class="btn btn-danger" id="confirm-dept-delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script src="js/department.js"></script>
+</body>
+</html>
