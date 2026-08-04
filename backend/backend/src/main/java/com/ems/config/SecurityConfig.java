@@ -40,15 +40,12 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
-
         return provider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration)
-            throws Exception {
-
+            AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -59,25 +56,25 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "https://employee-management-system-nine-xi-33.vercel.app"
+                "http://localhost:5500",
+                "http://localhost:3000",
+                "http://127.0.0.1:5500",
+                "http://127.0.0.1:3000",
+                "https://employee-management-system-nine-xi-33.vercel.app",
+                "https://employee-management-system-m59npeuh6.vercel.app"
         ));
 
         configuration.setAllowedMethods(List.of(
-                "GET",
-                "POST",
-                "PUT",
-                "DELETE",
-                "OPTIONS"
+                "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
         ));
 
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
 
@@ -85,8 +82,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(
             HttpSecurity http,
             JwtFilter jwtFilter,
-            DaoAuthenticationProvider authenticationProvider)
-            throws Exception {
+            DaoAuthenticationProvider authenticationProvider) throws Exception {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -95,12 +91,13 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-
                         .requestMatchers(
                                 "/api/auth/login",
+                                "/api/auth/register",
                                 "/test/password",
                                 "/test/hash",
-                                "/actuator/health"
+                                "/actuator/health",
+                                "/actuator/info"
                         ).permitAll()
 
                         .requestMatchers(
@@ -115,13 +112,8 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
-
                 .authenticationProvider(authenticationProvider)
-
-                .addFilterBefore(
-                        jwtFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

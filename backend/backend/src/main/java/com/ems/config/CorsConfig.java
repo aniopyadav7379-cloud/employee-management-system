@@ -17,13 +17,13 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(
-            "http://localhost:5173",
-            "http://localhost:5500",
-            "http://localhost:3000",
-            "http://127.0.0.1:5500",
-            "http://127.0.0.1:3000",
-            "https://employee-management-system-nine-xi-33.vercel.app",
-            "https://employee-management-system-m59npeuh6.vercel.app"
+                "http://localhost:5173",
+                "http://localhost:5500",
+                "http://localhost:3000",
+                "http://127.0.0.1:5500",
+                "http://127.0.0.1:3000",
+                "https://employee-management-system-nine-xi-33.vercel.app",
+                "https://employee-management-system-m59npeuh6.vercel.app"
         ));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));

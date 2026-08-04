@@ -87,7 +87,7 @@ const API = (() => {
   /* ── Auth Endpoints ───────────────────────────────────────── */
   const auth = {
     login: async (email, password) => {
-      const data = await post('/auth/login', { email, password });
+      const data = await post('/api/auth/login', { email, password });
       if (data?.token) {
         setToken(data.token);
         setUser(data.user || { email, name: email.split('@')[0], role: data.role });
@@ -99,62 +99,62 @@ const API = (() => {
       removeUser();
       window.location.href = 'index.html';
     },
-    me: () => get('/auth/me'),
+    me: () => get('/api/auth/me'),
   };
 
   /* ── Employee Endpoints ───────────────────────────────────── */
   const employees = {
     getAll:    (params = {}) => {
       const q = new URLSearchParams(params).toString();
-      return get(`/employees${q ? '?' + q : ''}`);
+      return get(`/api/employees${q ? '?' + q : ''}`);
     },
-    getById:   (id)          => get(`/employees/${id}`),
-    create:    (data)        => post('/employees', data),
-    update:    (id, data)    => put(`/employees/${id}`, data),
-    delete:    (id)          => del(`/employees/${id}`),
-    search:    (q)           => get(`/employees/search?q=${encodeURIComponent(q)}`),
-    getStats:  ()            => get('/employees/stats'),
-    recent:    ()            => get('/employees/recent'),
+    getById:   (id)          => get(`/api/employees/${id}`),
+    create:    (data)        => post('/api/employees', data),
+    update:    (id, data)    => put(`/api/employees/${id}`, data),
+    delete:    (id)          => del(`/api/employees/${id}`),
+    search:    (q)           => get(`/api/employees/search?q=${encodeURIComponent(q)}`),
+    getStats:  ()            => get('/api/employees/stats'),
+    recent:    ()            => get('/api/employees/recent'),
   };
 
   /* ── Department Endpoints ─────────────────────────────────── */
   const departments = {
-    getAll:  () => get('/departments'),
-    getById: (id) => get(`/departments/${id}`),
-    create:  (data) => post('/departments', data),
-    update:  (id, data) => put(`/departments/${id}`, data),
-    delete:  (id) => del(`/departments/${id}`),
-    getStats: () => get('/departments/stats'),
+    getAll:  () => get('/api/departments'),
+    getById: (id) => get(`/api/departments/${id}`),
+    create:  (data) => post('/api/departments', data),
+    update:  (id, data) => put(`/api/departments/${id}`, data),
+    delete:  (id) => del(`/api/departments/${id}`),
+    getStats: () => get('/api/departments/stats'),
   };
 
   /* ── Leave Endpoints ──────────────────────────────────────── */
   const leaves = {
     getAll:    (params = {}) => {
       const q = new URLSearchParams(params).toString();
-      return get(`/leaves${q ? '?' + q : ''}`);
+      return get(`/api/leaves${q ? '?' + q : ''}`);
     },
-    getById:   (id)         => get(`/leaves/${id}`),
-    create:    (data)       => post('/leaves', data),
-    approve:   (id, note)   => patch(`/leaves/${id}/approve`, { note }),
-    reject:    (id, reason) => patch(`/leaves/${id}/reject`, { reason }),
-    cancel:    (id)         => patch(`/leaves/${id}/cancel`),
-    getStats:  ()           => get('/leaves/stats'),
-    getBalance:(empId)      => get(`/leaves/balance/${empId}`),
-    getMy:     ()           => get('/leaves/my'),
+    getById:   (id)         => get(`/api/leaves/${id}`),
+    create:    (data)       => post('/api/leaves', data),
+    approve:   (id, note)   => patch(`/api/leaves/${id}/approve`, { note }),
+    reject:    (id, reason) => patch(`/api/leaves/${id}/reject`, { reason }),
+    cancel:    (id)         => patch(`/api/leaves/${id}/cancel`),
+    getStats:  ()           => get('/api/leaves/stats'),
+    getBalance:(empId)      => get(`/api/leaves/balance/${empId}`),
+    getMy:     ()           => get('/api/leaves/my'),
   };
 
   /* ── Dashboard Endpoints ──────────────────────────────────── */
   const dashboard = {
-    getSummary:     () => get('/dashboard/summary'),
-    getHeadcountTrend: (period) => get(`/dashboard/headcount?period=${period}`),
-    getRecentActivity:  ()     => get('/dashboard/activity'),
+    getSummary:     () => get('/api/dashboard/summary'),
+    getHeadcountTrend: (period) => get(`/api/dashboard/headcount?period=${period}`),
+    getRecentActivity:  ()     => get('/api/dashboard/activity'),
   };
 
   /* ── Profile Endpoints ────────────────────────────────────── */
   const profile = {
-    get:            ()     => get('/profile'),
-    update:         (data) => put('/profile', data),
-    changePassword: (data) => post('/profile/change-password', data),
+    get:            ()     => get('/api/profile'),
+    update:         (data) => put('/api/profile', data),
+    changePassword: (data) => post('/api/profile/change-password', data),
   };
 
   /* ── Convenience logout ───────────────────────────────────── */
