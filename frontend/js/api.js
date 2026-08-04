@@ -5,7 +5,7 @@
 
 const API = (() => {
 
-  const API_BASE_URL = 'https://employee-management-system-9tge.onrender.com';
+  const BASE_URL = "https://employee-management-system-9tge.onrender.com";
 
 
   /* ── Token Management ─────────────────────────────────────── */
